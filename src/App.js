@@ -41,16 +41,14 @@ class App extends Component {
       task_list: test_data.tasks,
     };
 
-    // this.setProfiles = this.setProfiles.bind(this);
-    // this.setProperties = this.setProperties.bind(this);
-    // this.setMessages = this.setMessages.bind(this);
+    this.onTaskToggle = this.onTaskToggle.bind(this);
 
     document.title = "TaskPro"
   }
 
-  // componentDidMount(){
-  //   document.title = "TaskPro"
-  // }
+  onTaskToggle(task_id){
+
+  }
 
   render() {
     const { task_list, } = this.state;
@@ -80,6 +78,7 @@ class App extends Component {
           <div className="col-sm-4">
             <TaskList
               tasks={task_list}
+              onTaskToggle={this.onTaskToggle}
               header_text="Main"
               sub_text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
               />

@@ -3,7 +3,12 @@ import React, { Component } from 'react';
 class TaskList extends Component {
   render(){
 
-    const {tasks, header_text, sub_text, } = this.props;
+    const {
+      tasks,
+      onTaskToggle,
+      header_text,
+      sub_text,
+    } = this.props;
 
     let list_items = [];
 
@@ -18,6 +23,7 @@ class TaskList extends Component {
           key={task}
           className={class_name}
           >
+
           <input type="checkbox"/>
           <span>{tasks[task].name}</span>
 
