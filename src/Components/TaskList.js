@@ -8,7 +8,6 @@ class TaskList extends Component {
     let list_items = [];
 
     for(let task in tasks){
-      // list_items.push(<li key={i}>{items[i].item} <span >{mark}</span></li>)
 
       let class_name = "task";
       if (tasks[task].completed)
