@@ -14,8 +14,10 @@ class TaskList extends Component {
 
     for(let task in tasks){
 
+      const completed = tasks[task].completed;
       let class_name = "task";
-      if (tasks[task].completed)
+
+      if (completed)
         class_name += " completed";
 
       list_items.push(
@@ -24,7 +26,11 @@ class TaskList extends Component {
           className={class_name}
           >
 
-          <input type="checkbox"/>
+          <input
+            type="checkbox"
+            checked={completed}
+            onChange={() => onTaskToggle(task)}
+            />
           <span>{tasks[task].name}</span>
 
         </li>

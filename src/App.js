@@ -39,6 +39,8 @@ class App extends Component {
 
     this.state = {
       task_list: test_data.tasks,
+      keyword_search: null,
+      tag_search: null,
     };
 
     this.onTaskToggle = this.onTaskToggle.bind(this);
@@ -46,8 +48,19 @@ class App extends Component {
     document.title = "TaskPro"
   }
 
-  onTaskToggle(task_id){
+  onTaskToggle(task){
 
+    const updated_task = {
+      ...this.state.task_list[task],
+      completed: !this.state.task_list[task].completed
+    };
+
+    let task_list = {
+      ...this.state.task_list,
+      [task]: updated_task
+    };
+
+    this.setState({ task_list });
   }
 
   render() {
