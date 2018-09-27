@@ -1,9 +1,30 @@
-.App header{
-  border-bottom: 1px solid #ddd;
-  margin: 20px 0;
+.App header {
+  background: #eee;
+  /* border-bottom: 1px solid #eee; */
+  margin: 0 0 20px 0;
+  padding: 20px;
 }
 
 .task-container{
-  border: 1px solid #aaa;
+  border: 1px solid #ccc;
   padding: 10px 20px;
+}
+
+.task-container .subtext{
+  color: #aaa;
+  font-size: .8em;
+}
+
+.task-list{
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 20px;
+}
+
+.task-list .task input{
+  margin-right: 10px;
+}
+
+.task-list .task.completed{
+  text-decoration: line-through
 }

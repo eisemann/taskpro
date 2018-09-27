@@ -4,42 +4,104 @@ import React, { Component } from 'react';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 
+import TaskList from './Components/TaskList';
+
+
+const test_data = {
+  tasks: {
+    5: {
+      name: 'read from fb',
+      completed: false
+    },
+    4: {
+      name: 'data linkage',
+      completed: false
+    },
+    3: {
+      name: 'generate test data',
+      completed: false
+    },
+    2: {
+      name: 'init project',
+      completed: true
+    },
+    1: {
+      name: 'set up project',
+      completed: true
+    }
+  }
+};
+
+
 class App extends Component {
-  componentDidMount(){
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      task_list: test_data.tasks,
+    };
+
+    // this.setProfiles = this.setProfiles.bind(this);
+    // this.setProperties = this.setProperties.bind(this);
+    // this.setMessages = this.setMessages.bind(this);
+
     document.title = "TaskPro"
   }
 
+  // componentDidMount(){
+  //   document.title = "TaskPro"
+  // }
+
   render() {
+    const { task_list, } = this.state;
     return (
       <div className="App container">
         <header>
+
           <h1>TaskPro</h1>
-          <p>Search</p>
+
+          {/* TODO: turn this in to a component */}
+          <div className="row">
+
+            <div className="col-sm-4">
+              <input type="text" className="form-control" placeholder="Search"/>
+            </div>
+
+            <div className="col-sm-4">
+              ... show completed ...
+            </div>
+
+          </div>
+
         </header>
 
         <div className="row">
 
           <div className="col-sm-4">
-            <div className="task-container">
-              <h2>Main</h2>
-              <p>list of all tasks</p>
-            </div>
-          </div>
-
-          <div className="col-sm-4">
-            <div className="task-container">
-              <h2>Priorities</h2>
-              <p>...</p>
-            </div>
-
+            <TaskList
+              tasks={task_list}
+              header_text="Main"
+              sub_text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+              />
           </div>
 
           <div className="col-sm-4">
 
-            <div className="task-container">
-              <h2>Deadlines</h2>
-              <p>...</p>
-            </div>
+            <TaskList
+              tasks={null}
+              header_text="Priorities"
+              sub_text="Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+              />
+
+          </div>
+
+          <div className="col-sm-4">
+
+            <TaskList
+              tasks={null}
+              header_text="Deadlines"
+              sub_text="Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+              />
 
           </div>
         </div>
