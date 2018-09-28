@@ -64,13 +64,6 @@ class App extends Component {
     const show_completed = !this.state.show_completed;
     // console.log(show_completed);
     this.setState({show_completed});
-
-    if (show_completed)
-      // console.log("show_completed")
-      $("li").removeClass("hidden");
-    else
-      // console.log("hide_completed")
-      $("li").addClass("hidden");
   }
 
   onTaskClick(event, task){
@@ -106,7 +99,7 @@ class App extends Component {
               <p className="subtext">Click a checkbox next to a task to mark it complete (checked) or not.  Click any task detail to edit a task.</p>
             </div>
 
-            <div className="col-sm-4 text-center">
+            <div className="col-sm-8 col-md-4 text-center">
 
               {/* TODO: turn this into a component */}
               <button
@@ -116,9 +109,8 @@ class App extends Component {
                 ><span>+</span>Add a task</button>
 
               {/* TODO: turn this into a component */}
-              <input type="text" className="form-control" placeholder="Search"/>
 
-              {/* TODO: turn this into a component */}
+              <p>
               <input
                 id="show_completed"
                 type="checkbox"
@@ -127,7 +119,10 @@ class App extends Component {
                 onChange={() => this.onShowCompletedToggle()}
                 />
               <label htmlFor="show_completed">Show Completed</label>
+              </p>
 
+              {/* TODO: turn this into a component */}
+              <input type="text" className="form-control" placeholder="Search"/>
 
             </div>
 
@@ -137,7 +132,7 @@ class App extends Component {
 
         <div className="row">
 
-          <div className="col-sm-4">
+          <div className="col-sm-6 col-md-4">
             <TaskList
               tasks={task_list}
               show_completed={show_completed}
@@ -149,7 +144,7 @@ class App extends Component {
               />
           </div>
 
-          <div className="col-sm-4">
+          <div className="col-sm-6 col-md-4">
 
             <TaskList
               tasks={task_list}
@@ -163,7 +158,7 @@ class App extends Component {
 
           </div>
 
-          <div className="col-sm-4">
+          <div className="col-sm-6 col-md-4">
 
             <TaskList
               tasks={task_list}

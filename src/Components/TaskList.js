@@ -13,8 +13,10 @@ class TaskList extends Component {
       sub_text,
     } = this.props;
 
+    // the unordered list items that will represent visible tasks
     let list_items = [];
 
+    // loops through the task list
     for(let task in tasks){
 
       const completed = tasks[task].completed;
@@ -22,22 +24,24 @@ class TaskList extends Component {
       let push_task = true;
 
       if (completed){
-        // NOTE: when we are showing completed tasks,
+        // When we are showing completed tasks,
         // we want this class applied so that the proper styles are applied.
         class_name += " completed";
-        // NOTE: when we are not showing completed tasks,
+        // When we are not showing completed tasks,
         // we'll skip pushing this task.
         if (!show_completed)
           push_task = false;
       }
 
+      // Build the task list
       if (push_task){
         list_items.push(
           <li
             key={task}
             className={class_name}
             >
-
+            
+            {/* TODO: turn this into a component */}
             <input
               type="checkbox"
               checked={completed}

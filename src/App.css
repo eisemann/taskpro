@@ -30,6 +30,7 @@
 .task-container{
   border: 1px solid #ccc;
   padding: 10px 20px;
+  margin-bottom: 20px;
 }
 
 .task-list{
