@@ -5,7 +5,7 @@ import React, { Component } from 'react';
 
 // bootstrap styles and js -----------------------------------------------------
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
-// import $ from 'jquery';
+import $ from 'jquery';
 // import Popper from 'popper.js';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 
@@ -13,6 +13,8 @@ import 'bootstrap/dist/js/bootstrap.bundle.min';
 import './App.css';
 
 // Components ------------------------------------------------------------------
+import KeywordSearch from './Components/KeywordSearch';
+import TaskEdit from './Components/TaskEdit';
 import TaskList from './Components/TaskList';
 
 
@@ -47,36 +49,89 @@ class App extends Component {
     super(props);
 
     this.state = {
+      currrent_task: null,
       task_list: test_data.tasks,
       show_completed: true,
       keyword_search: null,
       tag_search: null,
     };
 
+    this.onTaskNameChanged = this.onTaskNameChanged.bind(this);
+    this.onTaskDescriptionChanged = this.onTaskDescriptionChanged.bind(this);
+
     this.onShowCompletedToggle = this.onShowCompletedToggle.bind(this);
     this.onSearchChange = this.onSearchChange.bind(this);
-    this.onTaskClick = this.onTaskClick.bind(this);
+
+    this.onAddTask = this.onAddTask.bind(this);
+    this.onEditTask = this.onEditTask.bind(this);
     this.onTaskToggle = this.onTaskToggle.bind(this);
 
     document.title = "TaskPro"
   }
 
+  // ---------------------------------------------------------------------------
+  onTaskNameChanged(event){
+    let currrent_task = this.state.currrent_task;
+    currrent_task.name = event.target.value;
+    this.setState({ currrent_task });
+  }
+
+  onTaskDescriptionChanged(event){
+    let currrent_task = this.state.currrent_task;
+    currrent_task.description = event.target.value;
+    this.setState({ currrent_task });
+  }
+
+  // ---------------------------------------------------------------------------
+  // the "show completed" checkbox has been toggled
   onShowCompletedToggle(){
     const show_completed = !this.state.show_completed;
     // console.log(show_completed);
     this.setState({show_completed});
   }
 
+  // ---------------------------------------------------------------------------
+  // the keyword search has been changed
   onSearchChange(event){
     // console.log(event.target.value);
     this.setState({ keyword_search: event.target.value });
   }
 
-  onTaskClick(event, task){
-    event.preventDefault();
-
+  // ---------------------------------------------------------------------------
+  // the "add a task" button has been clicked
+  onAddTask(){
+    // init a new task (flat format)
+    const new_task = {
+      id: new Date().valueOf(),
+      name: "",
+      description: "",
+      completed: false
+    };
+    console.log(new_task);
+    this.setState({ currrent_task: new_task });
+    // modal opens via bootstrap callbacks
   }
 
+  // ---------------------------------------------------------------------------
+  // an existing task has been clicked
+  onEditTask(event, task){
+    event.preventDefault();
+
+    // get the selected task (in flat format)
+    const selected_task = {
+      ...this.state.task_list[task],
+      id: task
+    };
+
+    // console.log(task);
+    console.log(selected_task);
+    this.setState({ currrent_task: selected_task });
+    // open the modal
+    $('#taskModal').modal();
+  }
+
+  // ---------------------------------------------------------------------------
+  // mark a task as complete (checked), or not
   onTaskToggle(task){
 
     const updated_task = {
@@ -92,8 +147,15 @@ class App extends Component {
     this.setState({ task_list });
   }
 
+  // ---------------------------------------------------------------------------
   render() {
-    const { task_list, show_completed, keyword_search, } = this.state;
+    const {
+      currrent_task,
+      task_list,
+      show_completed,
+      keyword_search,
+    } = this.state;
+
     return (
       <div className="App container">
         <header>
@@ -109,30 +171,26 @@ class App extends Component {
 
               {/* TODO: turn this into a component */}
               <button
+                id="add_task_btn"
                 className="btn btn-primary icon"
+                onClick={() => this.onAddTask()}
                 data-toggle="modal"
                 data-target="#taskModal"
                 ><span>+</span>Add a task</button>
 
               {/* TODO: turn this into a component */}
-
               <p>
-              <input
-                id="show_completed"
-                type="checkbox"
-                className="show-completed"
-                checked={show_completed}
-                onChange={() => this.onShowCompletedToggle()}
-                />
-              <label htmlFor="show_completed">Show Completed</label>
+                <input
+                  type="checkbox"
+                  className="show-completed"
+                  checked={show_completed}
+                  onChange={() => this.onShowCompletedToggle()}
+                  />
+                <label htmlFor="show_completed">Show Completed</label>
               </p>
 
-              {/* TODO: turn this into a component */}
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Search"
-                onChange={(event) => this.onSearchChange(event)}
+              <KeywordSearch
+                onSearchChange={(event) => this.onSearchChange(event)}
                 />
 
             </div>
@@ -149,7 +207,7 @@ class App extends Component {
               show_completed={show_completed}
               keyword_search={keyword_search}
               sort_by="created_at"
-              onTaskClick={this.onTaskClick}
+              onEditTask={this.onEditTask}
               onTaskToggle={this.onTaskToggle}
               header_text="Main"
               sub_text="Sorted by creation date, most recent first."
@@ -163,7 +221,7 @@ class App extends Component {
               show_completed={show_completed}
               keyword_search={keyword_search}
               sort_by="priority"
-              onTaskClick={this.onTaskClick}
+              onEditTask={this.onEditTask}
               onTaskToggle={this.onTaskToggle}
               header_text="Priorities"
               sub_text="Sorted by priority, highest first."
@@ -178,7 +236,7 @@ class App extends Component {
               show_completed={show_completed}
               keyword_search={keyword_search}
               sort_by="deadline"
-              onTaskClick={this.onTaskClick}
+              onEditTask={this.onEditTask}
               onTaskToggle={this.onTaskToggle}
               header_text="Deadlines"
               sub_text="Sorted by deadline date."
@@ -197,13 +255,12 @@ class App extends Component {
                 </button>
               </div>
               <div className="modal-body">
-                <p>name</p>
-                <p>description</p>
 
-                <p>subtasks</p>
-                <p>points/hours</p>
-                <p>deadline</p>
-                <p>tags</p>
+                <TaskEdit
+                  task={currrent_task}
+                  onTaskNameChanged={this.onTaskNameChanged}
+                  onTaskDescriptionChanged={this.onTaskDescriptionChanged}
+                  />
 
               </div>
               <div className="modal-footer">

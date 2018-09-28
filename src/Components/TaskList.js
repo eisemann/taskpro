@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
 
-// const isSearched =
-//   searchTerm =>
-//     item => s
 
 class TaskList extends Component {
   render(){
@@ -12,7 +9,7 @@ class TaskList extends Component {
       show_completed,
       keyword_search,
       sort_by,
-      onTaskClick,
+      onEditTask,
       onTaskToggle,
       header_text,
       sub_text,
@@ -58,7 +55,7 @@ class TaskList extends Component {
               />
             <a
               href="#edit"
-              onClick={(event) => onTaskClick(event, task)}
+              onClick={(event) => onEditTask(event, task)}
               ><span>{tasks[task].name}</span></a>
 
           </li>
