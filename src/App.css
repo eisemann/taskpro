@@ -5,14 +5,31 @@
   padding: 20px;
 }
 
+/* .App header h1{
+  display:inline-block;
+  margin-right: 20px;
+} */
+
+.subtext{
+  color: #aaa;
+  font-size: .8em;
+}
+
+.btn.icon{
+    margin-bottom: 15px;
+    padding-right: 20px;
+}
+
+.btn.icon span{
+  border-right: 1px solid #5aa;
+  padding-right: 15px;
+  margin-right: 15px;
+}
+
+/* -------------------------------------------------------------------------- */
 .task-container{
   border: 1px solid #ccc;
   padding: 10px 20px;
-}
-
-.task-container .subtext{
-  color: #aaa;
-  font-size: .8em;
 }
 
 .task-list{
@@ -21,6 +38,7 @@
   padding: 0 0 0 20px;
 }
 
+.show-completed,
 .task-list .task input{
   margin-right: 10px;
 }

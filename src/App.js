@@ -1,9 +1,18 @@
 import React, { Component } from 'react';
 
+// firebase --------------------------------------------------------------------
 // import firebase from './firebase';
+
+// bootstrap styles and js -----------------------------------------------------
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import $ from 'jquery';
+// import Popper from 'popper.js';
+import 'bootstrap/dist/js/bootstrap.bundle.min';
+
+// styles ----------------------------------------------------------------------
 import './App.css';
 
+// Components ------------------------------------------------------------------
 import TaskList from './Components/TaskList';
 
 
@@ -26,7 +35,7 @@ const test_data = {
       completed: true
     },
     1: {
-      name: 'set up project',
+      name: 'Set up project',
       completed: true
     }
   }
@@ -39,13 +48,34 @@ class App extends Component {
 
     this.state = {
       task_list: test_data.tasks,
+      show_completed: true,
       keyword_search: null,
       tag_search: null,
     };
 
+    this.onShowCompletedToggle = this.onShowCompletedToggle.bind(this);
+    this.onTaskClick = this.onTaskClick.bind(this);
     this.onTaskToggle = this.onTaskToggle.bind(this);
 
     document.title = "TaskPro"
+  }
+
+  onShowCompletedToggle(){
+    const show_completed = !this.state.show_completed;
+    // console.log(show_completed);
+    this.setState({show_completed});
+
+    if (show_completed)
+      // console.log("show_completed")
+      $("li").removeClass("hidden");
+    else
+      // console.log("hide_completed")
+      $("li").addClass("hidden");
+  }
+
+  onTaskClick(event, task){
+    event.preventDefault();
+
   }
 
   onTaskToggle(task){
@@ -64,22 +94,41 @@ class App extends Component {
   }
 
   render() {
-    const { task_list, } = this.state;
+    const { task_list, show_completed, } = this.state;
     return (
       <div className="App container">
         <header>
 
-          <h1>TaskPro</h1>
-
-          {/* TODO: turn this in to a component */}
           <div className="row">
 
             <div className="col-sm-4">
-              <input type="text" className="form-control" placeholder="Search"/>
+              <h1>TaskPro</h1>
+              <p className="subtext">Click a checkbox next to a task to mark it complete (checked) or not.  Click any task detail to edit a task.</p>
             </div>
 
-            <div className="col-sm-4">
-              ... show completed ...
+            <div className="col-sm-4 text-center">
+
+              {/* TODO: turn this into a component */}
+              <button
+                className="btn btn-primary icon"
+                data-toggle="modal"
+                data-target="#taskModal"
+                ><span>+</span>Add a task</button>
+
+              {/* TODO: turn this into a component */}
+              <input type="text" className="form-control" placeholder="Search"/>
+
+              {/* TODO: turn this into a component */}
+              <input
+                id="show_completed"
+                type="checkbox"
+                className="show-completed"
+                checked={show_completed}
+                onChange={() => this.onShowCompletedToggle()}
+                />
+              <label htmlFor="show_completed">Show Completed</label>
+
+
             </div>
 
           </div>
@@ -91,18 +140,25 @@ class App extends Component {
           <div className="col-sm-4">
             <TaskList
               tasks={task_list}
+              show_completed={show_completed}
+              sort_by="created_at"
+              onTaskClick={this.onTaskClick}
               onTaskToggle={this.onTaskToggle}
               header_text="Main"
-              sub_text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+              sub_text="Sorted by creation date, most recent first."
               />
           </div>
 
           <div className="col-sm-4">
 
             <TaskList
-              tasks={null}
+              tasks={task_list}
+              show_completed={show_completed}
+              sort_by="priority"
+              onTaskClick={this.onTaskClick}
+              onTaskToggle={this.onTaskToggle}
               header_text="Priorities"
-              sub_text="Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+              sub_text="Sorted by priority, highest first."
               />
 
           </div>
@@ -110,13 +166,45 @@ class App extends Component {
           <div className="col-sm-4">
 
             <TaskList
-              tasks={null}
+              tasks={task_list}
+              show_completed={show_completed}
+              sort_by="deadline"
+              onTaskClick={this.onTaskClick}
+              onTaskToggle={this.onTaskToggle}
               header_text="Deadlines"
-              sub_text="Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+              sub_text="Sorted by deadline date."
               />
 
           </div>
         </div>
+
+        <div className="modal fade" id="taskModal" tabIndex="-1" role="dialog" aria-labelledby="taskModalLabel" aria-hidden="true">
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title" id="taskModalLabel">Add/Edit Task</h5>
+                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div className="modal-body">
+                <p>name</p>
+                <p>description</p>
+
+                <p>subtasks</p>
+                <p>points/hours</p>
+                <p>deadline</p>
+                <p>tags</p>
+
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" className="btn btn-primary">Save changes</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
 
       </div>
     );
