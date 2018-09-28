@@ -1,11 +1,16 @@
 import React, { Component } from 'react';
 
+// const isSearched =
+//   searchTerm =>
+//     item => s
+
 class TaskList extends Component {
   render(){
 
     const {
       tasks,
       show_completed,
+      keyword_search,
       sort_by,
       onTaskClick,
       onTaskToggle,
@@ -17,11 +22,15 @@ class TaskList extends Component {
     let list_items = [];
 
     // loops through the task list
-    for(let task in tasks){
+    for (let task in tasks){
 
       const completed = tasks[task].completed;
       let class_name = "task";
-      let push_task = true;
+
+      let push_task =
+        !!keyword_search ?
+          tasks[task].name.toLowerCase().includes(keyword_search.toLowerCase())
+          : true ;
 
       if (completed){
         // When we are showing completed tasks,
@@ -40,7 +49,7 @@ class TaskList extends Component {
             key={task}
             className={class_name}
             >
-            
+
             {/* TODO: turn this into a component */}
             <input
               type="checkbox"

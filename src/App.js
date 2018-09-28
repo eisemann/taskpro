@@ -54,6 +54,7 @@ class App extends Component {
     };
 
     this.onShowCompletedToggle = this.onShowCompletedToggle.bind(this);
+    this.onSearchChange = this.onSearchChange.bind(this);
     this.onTaskClick = this.onTaskClick.bind(this);
     this.onTaskToggle = this.onTaskToggle.bind(this);
 
@@ -64,6 +65,11 @@ class App extends Component {
     const show_completed = !this.state.show_completed;
     // console.log(show_completed);
     this.setState({show_completed});
+  }
+
+  onSearchChange(event){
+    // console.log(event.target.value);
+    this.setState({ keyword_search: event.target.value });
   }
 
   onTaskClick(event, task){
@@ -87,7 +93,7 @@ class App extends Component {
   }
 
   render() {
-    const { task_list, show_completed, } = this.state;
+    const { task_list, show_completed, keyword_search, } = this.state;
     return (
       <div className="App container">
         <header>
@@ -122,7 +128,12 @@ class App extends Component {
               </p>
 
               {/* TODO: turn this into a component */}
-              <input type="text" className="form-control" placeholder="Search"/>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Search"
+                onChange={(event) => this.onSearchChange(event)}
+                />
 
             </div>
 
@@ -136,6 +147,7 @@ class App extends Component {
             <TaskList
               tasks={task_list}
               show_completed={show_completed}
+              keyword_search={keyword_search}
               sort_by="created_at"
               onTaskClick={this.onTaskClick}
               onTaskToggle={this.onTaskToggle}
@@ -149,6 +161,7 @@ class App extends Component {
             <TaskList
               tasks={task_list}
               show_completed={show_completed}
+              keyword_search={keyword_search}
               sort_by="priority"
               onTaskClick={this.onTaskClick}
               onTaskToggle={this.onTaskToggle}
@@ -163,6 +176,7 @@ class App extends Component {
             <TaskList
               tasks={task_list}
               show_completed={show_completed}
+              keyword_search={keyword_search}
               sort_by="deadline"
               onTaskClick={this.onTaskClick}
               onTaskToggle={this.onTaskToggle}
