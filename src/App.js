@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 // firebase --------------------------------------------------------------------
-// import firebase from './firebase';
+import firebase from './firebase';
 
 // bootstrap styles and js -----------------------------------------------------
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
@@ -19,43 +19,19 @@ import TaskEdit from './Components/TaskEdit';
 import TaskList from './Components/TaskList';
 
 
-const test_data = {
-  tasks: {
-    5: {
-      name: 'read from fb',
-      completed: false
-    },
-    4: {
-      name: 'data linkage',
-      completed: false
-    },
-    3: {
-      name: 'generate test data',
-      completed: false
-    },
-    2: {
-      name: 'init project',
-      completed: true
-    },
-    1: {
-      name: 'Set up project',
-      completed: true
-    }
-  }
-};
-
-
 class App extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       currrent_task: null,
-      task_list: test_data.tasks,
+      task_list: null,
       show_completed: true,
       keyword_search: null,
       tag_search: null,
     };
+
+    this.fbTasksRef = null;
 
     this.onTaskNameChanged = this.onTaskNameChanged.bind(this);
     this.onTaskDescriptionChanged = this.onTaskDescriptionChanged.bind(this);
@@ -70,6 +46,24 @@ class App extends Component {
 
     document.title = "TaskPro"
     // favicon set in index.html
+  }
+
+  componentDidMount() {
+
+    this.fbTasksRef = firebase.database().ref('/tasks');
+    this.fbTasksRef.on('value', (snapshot) => {
+      const task_list = snapshot.val();
+      // let items = snapshot.val();
+      // console.log(items);
+      // this.setProfiles(items.profiles);
+      // this.setProperties(items.properties);
+      this.setState({task_list});
+    });
+
+  }
+
+  componentWillUnmount(){
+    firebase.removeBinding(this.fbTasksRef);
   }
 
   // ---------------------------------------------------------------------------
@@ -95,22 +89,20 @@ class App extends Component {
 
     const { id, name, description, completed } = this.state.currrent_task;
 
-    const new_task_for_list = {
-      [id]: {
-        name,
-        description,
-        completed,
-      }
-    };
-
-    console.log(new_task_for_list);
-
-    const task_list = {
-      ...this.state.task_list,
-      ...new_task_for_list
-    };
-
-    this.setState({ task_list });
+    if (id){
+      this.fbTasksRef.update({
+        [id]:{
+          ...this.state.task_list[id],
+          name, description, completed
+        }
+      })
+    }
+    else {
+      // push a new task
+      this.fbTasksRef.push({
+        name, description, completed
+      })
+    }
   }
 
   // ---------------------------------------------------------------------------
@@ -133,7 +125,7 @@ class App extends Component {
   onAddTask(){
     // init a new task (flat format)
     const new_task = {
-      id: new Date().valueOf(),
+      id: null,
       name: "",
       description: "",
       completed: false
@@ -166,17 +158,31 @@ class App extends Component {
   // mark a task as complete (checked), or not
   onTaskToggle(task){
 
-    const updated_task = {
-      ...this.state.task_list[task],
-      completed: !this.state.task_list[task].completed
-    };
+    const id = task;
+    const completed = !this.state.task_list[task].completed;
 
-    let task_list = {
-      ...this.state.task_list,
-      [task]: updated_task
-    };
+    // const updated_task = {
+    //   ...this.state.task_list[task],
+    //   completed: !this.state.task_list[task].completed
+    // };
+    //
+    // let task_list = {
+    //   ...this.state.task_list,
+    //   [task]: updated_task
+    // };
 
-    this.setState({ task_list });
+    // this.setState({ task_list });
+
+    if (id) {
+      this.fbTasksRef.update({
+        [id]:{
+          ...this.state.task_list[id],
+          completed
+        }
+      })
+    }
+
+
   }
 
   // ---------------------------------------------------------------------------
