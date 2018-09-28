@@ -14,6 +14,7 @@ import './App.css';
 
 // Components ------------------------------------------------------------------
 import KeywordSearch from './Components/KeywordSearch';
+import ShowCompletedCheckbox from './Components/ShowCompletedCheckbox';
 import TaskEdit from './Components/TaskEdit';
 import TaskList from './Components/TaskList';
 
@@ -58,6 +59,7 @@ class App extends Component {
 
     this.onTaskNameChanged = this.onTaskNameChanged.bind(this);
     this.onTaskDescriptionChanged = this.onTaskDescriptionChanged.bind(this);
+    this.onSaveCurrentTask = this.onSaveCurrentTask.bind(this);
 
     this.onShowCompletedToggle = this.onShowCompletedToggle.bind(this);
     this.onSearchChange = this.onSearchChange.bind(this);
@@ -67,6 +69,7 @@ class App extends Component {
     this.onTaskToggle = this.onTaskToggle.bind(this);
 
     document.title = "TaskPro"
+    // favicon set in index.html
   }
 
   // ---------------------------------------------------------------------------
@@ -81,9 +84,33 @@ class App extends Component {
   }
 
   onTaskDescriptionChanged(event){
-    // let currrent_task = this.state.currrent_task;
-    // currrent_task.description = event.target.value;
-    // this.setState({ currrent_task });
+    let currrent_task = this.state.currrent_task;
+    currrent_task.description = event.target.value;
+    // console.log(currrent_task.description);
+    this.setState({ currrent_task });
+    // console.log(this.state.currrent_task);
+  }
+
+  onSaveCurrentTask(){
+
+    const { id, name, description, completed } = this.state.currrent_task;
+
+    const new_task_for_list = {
+      [id]: {
+        name,
+        description,
+        completed,
+      }
+    };
+
+    console.log(new_task_for_list);
+
+    const task_list = {
+      ...this.state.task_list,
+      ...new_task_for_list
+    };
+
+    this.setState({ task_list });
   }
 
   // ---------------------------------------------------------------------------
@@ -111,6 +138,7 @@ class App extends Component {
       description: "",
       completed: false
     };
+
     console.log(new_task);
     this.setState({ currrent_task: new_task });
     // modal opens via bootstrap callbacks
@@ -162,6 +190,8 @@ class App extends Component {
 
     return (
       <div className="App container">
+
+        {/* header, add task button, show completed toggle, keyword search */}
         <header>
 
           <div className="row">
@@ -182,28 +212,18 @@ class App extends Component {
                 data-target="#taskModal"
                 ><span>+</span>Add a task</button>
 
-              {/* TODO: turn this into a component */}
-              <p>
-                <input
-                  type="checkbox"
-                  className="show-completed"
-                  checked={show_completed}
-                  onChange={() => this.onShowCompletedToggle()}
-                  />
-                <label htmlFor="show_completed">Show Completed</label>
-              </p>
+              <ShowCompletedCheckbox
+                checked={show_completed}
+                onToggle={this.onShowCompletedToggle}
+                >Show Completed</ShowCompletedCheckbox>
 
-              <KeywordSearch
-                onSearchChange={(event) => this.onSearchChange(event)}
-                />
+              <KeywordSearch onSearchChange={(event) => this.onSearchChange(event)} />
 
             </div>
-
           </div>
-
         </header>
 
-
+        {/* main/lists display */}
         <div className="row">
 
           <div className="col-sm-6 col-md-4">
@@ -250,6 +270,7 @@ class App extends Component {
           </div>
         </div>
 
+        {/* bootstrap modal */}
         <div className="modal fade" id="taskModal" tabIndex="-1" role="dialog" aria-labelledby="taskModalLabel" aria-hidden="true">
           <div className="modal-dialog" role="document">
             <div className="modal-content">
@@ -270,7 +291,12 @@ class App extends Component {
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" className="btn btn-primary">Save changes</button>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  data-dismiss="modal"
+                  onClick={this.onSaveCurrentTask}
+                  >Save changes</button>
               </div>
             </div>
           </div>

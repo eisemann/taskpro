@@ -19,8 +19,8 @@ class TaskEdit extends Component {
 
 {
 /*
-NOTE: the prop || '' code addresses the following warning that happens without it:
-Warning: A component is changing a controlled input of type text to be uncontrolled.
+NOTE: the {prop.value || ''} code addresses the following warning that happens without it:
+"Warning: A component is changing a controlled input of type text to be uncontrolled...."
 */
 }
             <input
