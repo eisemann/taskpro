@@ -71,15 +71,19 @@ class App extends Component {
 
   // ---------------------------------------------------------------------------
   onTaskNameChanged(event){
-    let currrent_task = this.state.currrent_task;
-    currrent_task.name = event.target.value;
+    // let currrent_task = this.state.currrent_task;
+    // currrent_task.name = event.target.value;
+    const currrent_task = {
+      ...this.state.currrent_task,
+      name: event.target.value
+    };
     this.setState({ currrent_task });
   }
 
   onTaskDescriptionChanged(event){
-    let currrent_task = this.state.currrent_task;
-    currrent_task.description = event.target.value;
-    this.setState({ currrent_task });
+    // let currrent_task = this.state.currrent_task;
+    // currrent_task.description = event.target.value;
+    // this.setState({ currrent_task });
   }
 
   // ---------------------------------------------------------------------------
@@ -198,6 +202,7 @@ class App extends Component {
           </div>
 
         </header>
+
 
         <div className="row">
 

@@ -16,11 +16,18 @@ class TaskEdit extends Component {
 
         <div className="task-edit-container">
           <form>
+
+{
+/*
+NOTE: the prop || '' code addresses the following warning that happens without it:
+Warning: A component is changing a controlled input of type text to be uncontrolled.
+*/
+}
             <input
               type="text"
               className="form-control"
               placeholder="Task Name"
-              value={task.name}
+              value={task.name || ''}
               onChange={event => onTaskNameChanged(event)}
               />
 
@@ -28,7 +35,7 @@ class TaskEdit extends Component {
               type="text"
               className="form-control"
               placeholder="Description"
-              value={task.description}
+              value={task.description || ''}
               onChange={event => onTaskDescriptionChanged(event)}
               />
 
@@ -40,7 +47,6 @@ class TaskEdit extends Component {
         </div>
 
       : null
-
     );
   }
 }
