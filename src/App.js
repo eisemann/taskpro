@@ -9,6 +9,11 @@ import $ from 'jquery';
 // import Popper from 'popper.js';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 
+// React Date Picker and Moment ------------------------------------------------
+import DatePicker from 'react-datepicker';
+import moment from 'moment';
+import 'react-datepicker/dist/react-datepicker.css';
+
 // styles ----------------------------------------------------------------------
 import './App.css';
 
@@ -19,6 +24,7 @@ import TaskEdit from './Components/TaskEdit';
 import TaskList from './Components/TaskList';
 
 
+// =============================================================================
 class App extends Component {
   constructor(props) {
     super(props);
@@ -31,6 +37,7 @@ class App extends Component {
       tag_search: null,
     };
 
+    // firebase DB reference
     this.fbTasksRef = null;
 
     this.onTaskNameChanged = this.onTaskNameChanged.bind(this);
@@ -53,10 +60,6 @@ class App extends Component {
     this.fbTasksRef = firebase.database().ref('/tasks');
     this.fbTasksRef.on('value', (snapshot) => {
       const task_list = snapshot.val();
-      // let items = snapshot.val();
-      // console.log(items);
-      // this.setProfiles(items.profiles);
-      // this.setProperties(items.properties);
       this.setState({task_list});
     });
 
@@ -68,8 +71,6 @@ class App extends Component {
 
   // ---------------------------------------------------------------------------
   onTaskNameChanged(event){
-    // let currrent_task = this.state.currrent_task;
-    // currrent_task.name = event.target.value;
     const currrent_task = {
       ...this.state.currrent_task,
       name: event.target.value
@@ -80,16 +81,19 @@ class App extends Component {
   onTaskDescriptionChanged(event){
     let currrent_task = this.state.currrent_task;
     currrent_task.description = event.target.value;
-    // console.log(currrent_task.description);
     this.setState({ currrent_task });
-    // console.log(this.state.currrent_task);
   }
 
   onSaveCurrentTask(){
-
-    const { id, name, description, completed } = this.state.currrent_task;
+    const {
+      id,
+      name,
+      description,
+      completed
+    } = this.state.currrent_task;
 
     if (id){
+      // update existing task
       this.fbTasksRef.update({
         [id]:{
           ...this.state.task_list[id],
@@ -131,7 +135,7 @@ class App extends Component {
       completed: false
     };
 
-    console.log(new_task);
+    // console.log(new_task);
     this.setState({ currrent_task: new_task });
     // modal opens via bootstrap callbacks
   }
@@ -147,8 +151,7 @@ class App extends Component {
       id: task
     };
 
-    // console.log(task);
-    console.log(selected_task);
+    // console.log(selected_task);
     this.setState({ currrent_task: selected_task });
     // open the modal
     $('#taskModal').modal();
@@ -157,22 +160,9 @@ class App extends Component {
   // ---------------------------------------------------------------------------
   // mark a task as complete (checked), or not
   onTaskToggle(task){
-
     const id = task;
     const completed = !this.state.task_list[task].completed;
-
-    // const updated_task = {
-    //   ...this.state.task_list[task],
-    //   completed: !this.state.task_list[task].completed
-    // };
-    //
-    // let task_list = {
-    //   ...this.state.task_list,
-    //   [task]: updated_task
-    // };
-
-    // this.setState({ task_list });
-
+    // TODO: DRY update; this is very similar to part of onSaveCurrentTask
     if (id) {
       this.fbTasksRef.update({
         [id]:{
@@ -181,8 +171,6 @@ class App extends Component {
         }
       })
     }
-
-
   }
 
   // ---------------------------------------------------------------------------

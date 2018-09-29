@@ -64,6 +64,8 @@ class TaskList extends Component {
       }
     }
 
+    {/* TODO: apply sort_by */}
+
     return(
 
       <div className="task-container">
