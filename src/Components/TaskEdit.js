@@ -12,12 +12,9 @@ import 'react-day-picker/lib/style.css';
 
 class TaskEdit extends Component {
   render(){
-    console.log("render TaskEdit");
-    console.log(this.props.task);
-    console.log(this.props.deadline);
+
     const {
       task,
-      deadline,
       onTaskNameChanged,
       onTaskDescriptionChanged,
       onDeadlineChanged,
@@ -55,14 +52,14 @@ NOTE: the {prop.value || ''} code addresses the following warning that happens w
 
 
             <DayPickerInput
-              value={deadline}
+              value={task.deadline}
               onDayChange={date => onDeadlineChanged(date)}
               formatDate={formatDate}
               parseDate={parseDate}
               placeholder={`Deadline (e.g. ${formatDate(new Date())})`}
 
               dayPickerProps={{
-                selectedDay: deadline,
+                selectedDay: task.deadline,
               }}
             />
 

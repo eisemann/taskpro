@@ -33,7 +33,6 @@ class App extends Component {
 
     this.state = {
       current_task: null,
-      current_deadline: '',
       task_list: null,
       show_completed: true,
       keyword_search: null,
@@ -88,31 +87,15 @@ class App extends Component {
       ...this.state.current_task,
       description: event.target.value
     };
-
     this.setState({ current_task });
   }
 
   onDeadlineChanged(deadline){
-    console.log(deadline);
-    this.setState({ current_deadline: deadline });
-
-    // let current_task = this.state.current_task;
-    // current_task.deadline = date;
-    // this.setState({ current_task });
-
-
-    // let current_task = this.state.current_task;
-    // console.log(event.target.value);
-    // current_task.deadline = event.target.value;
-    // this.setState({ current_task });
-
-    // console.log("onDeadlineChanged");
-    // this.setState({
-    //   deadline: date
-    // });
-    // console.log(this.state.deadline.format('MMMM Do YYYY, h:mm:ss a'));
-    // console.log(date.format('YYYY/MM/DD'));
-
+    const current_task = {
+      ...this.state.current_task,
+      deadline
+    };
+    this.setState({ current_task });
   }
 
   // ---------------------------------------------------------------------------
@@ -122,10 +105,9 @@ class App extends Component {
       id,
       name,
       description,
+      deadline,
       completed
     } = this.state.current_task;
-
-    const deadline = moment.formatDate(this.state.current_deadline);
 
     if (id){
       // update existing task
@@ -148,14 +130,12 @@ class App extends Component {
   // the "show completed" checkbox has been toggled
   onShowCompletedToggle(){
     const show_completed = !this.state.show_completed;
-    // console.log(show_completed);
     this.setState({show_completed});
   }
 
   // ---------------------------------------------------------------------------
   // the keyword search has been changed
   onSearchChange(event){
-    // console.log(event.target.value);
     this.setState({ keyword_search: event.target.value });
   }
 
@@ -167,14 +147,11 @@ class App extends Component {
       id: null,
       name: "",
       description: "",
+      deadline: '',
       completed: false
     };
 
-    // console.log(new_task);
-    this.setState({
-      current_task: new_task,
-      current_deadline: '',
-    });
+    this.setState({ current_task: new_task });
     // modal opens via bootstrap callbacks
   }
 
@@ -183,26 +160,17 @@ class App extends Component {
   onEditTask(event, task){
     event.preventDefault();
 
-    // get the selected task (in flat format)
+    // get the selected task (in flat format); add in the ID field
     const selected_task = {
       ...this.state.task_list[task],
       id: task
     };
 
-    // let selected_task_deadline = moment(selected_task.deadline, 'MM/DD/YYYY', true);
-    // if (!selected_task_deadline.isValid())
-    let selected_task_deadline = selected_task.deadline;
-    // if (!moment.isValid(selected_task.deadline, 'MM/DD/YYYY', true))
+    // if deadline is not valid, clear it
+    if (!moment(selected_task.deadline, 'MM/DD/YYYY').isValid())
+      selected_task.deadline = '';
 
-    if (!moment(selected_task_deadline, 'MM/DD/YYYY').isValid())
-      selected_task_deadline = '';
-
-    console.log("onEditTask > selected_task")
-    console.log(selected_task);
-    this.setState({
-      current_task: selected_task,
-      current_deadline: selected_task_deadline,
-     });
+    this.setState({ current_task: selected_task });
     // open the modal
     $('#taskModal').modal();
   }
@@ -227,7 +195,6 @@ class App extends Component {
   render() {
     const {
       current_task,
-      current_deadline,
       task_list,
       show_completed,
       keyword_search,
@@ -331,7 +298,6 @@ class App extends Component {
 
                 <TaskEdit
                   task={current_task}
-                  deadline={current_deadline}
                   onTaskNameChanged={this.onTaskNameChanged}
                   onTaskDescriptionChanged={this.onTaskDescriptionChanged}
                   onDeadlineChanged={this.onDeadlineChanged}
