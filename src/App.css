@@ -1,3 +1,14 @@
+.DayPickerInput, .DayPickerInput input{
+  width:100%;
+}
+
+.DayPickerInput input{
+    padding: .375rem .75rem;
+    border-radius: .25rem;
+    border: 1px solid #ced4da;
+}
+
+
 .App header {
   background: #eee;
   /* border-bottom: 1px solid #eee; */

@@ -9,10 +9,12 @@ import $ from 'jquery';
 // import Popper from 'popper.js';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 
-// React Date Picker and Moment ------------------------------------------------
-import DatePicker from 'react-datepicker';
+// React Day Picker and Moment ------------------------------------------------
+// import MomentLocaleUtils, {
+//   formatDate,
+//   parseDate,
+// } from 'react-day-picker/moment';
 import moment from 'moment';
-import 'react-datepicker/dist/react-datepicker.css';
 
 // styles ----------------------------------------------------------------------
 import './App.css';
@@ -30,11 +32,12 @@ class App extends Component {
     super(props);
 
     this.state = {
-      currrent_task: null,
+      current_task: null,
+      current_deadline: '',
       task_list: null,
       show_completed: true,
       keyword_search: null,
-      tag_search: null,
+      tag_search: null
     };
 
     // firebase DB reference
@@ -42,6 +45,8 @@ class App extends Component {
 
     this.onTaskNameChanged = this.onTaskNameChanged.bind(this);
     this.onTaskDescriptionChanged = this.onTaskDescriptionChanged.bind(this);
+    this.onDeadlineChanged = this.onDeadlineChanged.bind(this);
+
     this.onSaveCurrentTask = this.onSaveCurrentTask.bind(this);
 
     this.onShowCompletedToggle = this.onShowCompletedToggle.bind(this);
@@ -71,18 +76,46 @@ class App extends Component {
 
   // ---------------------------------------------------------------------------
   onTaskNameChanged(event){
-    const currrent_task = {
-      ...this.state.currrent_task,
+    const current_task = {
+      ...this.state.current_task,
       name: event.target.value
     };
-    this.setState({ currrent_task });
+    this.setState({ current_task });
   }
 
   onTaskDescriptionChanged(event){
-    let currrent_task = this.state.currrent_task;
-    currrent_task.description = event.target.value;
-    this.setState({ currrent_task });
+    const current_task = {
+      ...this.state.current_task,
+      description: event.target.value
+    };
+
+    this.setState({ current_task });
   }
+
+  onDeadlineChanged(deadline){
+    console.log(deadline);
+    this.setState({ current_deadline: deadline });
+
+    // let current_task = this.state.current_task;
+    // current_task.deadline = date;
+    // this.setState({ current_task });
+
+
+    // let current_task = this.state.current_task;
+    // console.log(event.target.value);
+    // current_task.deadline = event.target.value;
+    // this.setState({ current_task });
+
+    // console.log("onDeadlineChanged");
+    // this.setState({
+    //   deadline: date
+    // });
+    // console.log(this.state.deadline.format('MMMM Do YYYY, h:mm:ss a'));
+    // console.log(date.format('YYYY/MM/DD'));
+
+  }
+
+  // ---------------------------------------------------------------------------
 
   onSaveCurrentTask(){
     const {
@@ -90,21 +123,23 @@ class App extends Component {
       name,
       description,
       completed
-    } = this.state.currrent_task;
+    } = this.state.current_task;
+
+    const deadline = moment.formatDate(this.state.current_deadline);
 
     if (id){
       // update existing task
       this.fbTasksRef.update({
         [id]:{
           ...this.state.task_list[id],
-          name, description, completed
+          name, description, completed, deadline
         }
       })
     }
     else {
       // push a new task
       this.fbTasksRef.push({
-        name, description, completed
+        name, description, completed, deadline
       })
     }
   }
@@ -136,7 +171,10 @@ class App extends Component {
     };
 
     // console.log(new_task);
-    this.setState({ currrent_task: new_task });
+    this.setState({
+      current_task: new_task,
+      current_deadline: '',
+    });
     // modal opens via bootstrap callbacks
   }
 
@@ -151,8 +189,20 @@ class App extends Component {
       id: task
     };
 
-    // console.log(selected_task);
-    this.setState({ currrent_task: selected_task });
+    // let selected_task_deadline = moment(selected_task.deadline, 'MM/DD/YYYY', true);
+    // if (!selected_task_deadline.isValid())
+    let selected_task_deadline = selected_task.deadline;
+    // if (!moment.isValid(selected_task.deadline, 'MM/DD/YYYY', true))
+
+    if (!moment(selected_task_deadline, 'MM/DD/YYYY').isValid())
+      selected_task_deadline = '';
+
+    console.log("onEditTask > selected_task")
+    console.log(selected_task);
+    this.setState({
+      current_task: selected_task,
+      current_deadline: selected_task_deadline,
+     });
     // open the modal
     $('#taskModal').modal();
   }
@@ -176,7 +226,8 @@ class App extends Component {
   // ---------------------------------------------------------------------------
   render() {
     const {
-      currrent_task,
+      current_task,
+      current_deadline,
       task_list,
       show_completed,
       keyword_search,
@@ -193,6 +244,8 @@ class App extends Component {
             <div className="col-sm-4">
               <h1>TaskPro</h1>
               <p className="subtext">Click a checkbox next to a task to mark it complete (checked) or not.  Click any task detail to edit a task.</p>
+
+
             </div>
 
             <div className="col-sm-8 col-md-4 text-center">
@@ -277,9 +330,11 @@ class App extends Component {
               <div className="modal-body">
 
                 <TaskEdit
-                  task={currrent_task}
+                  task={current_task}
+                  deadline={current_deadline}
                   onTaskNameChanged={this.onTaskNameChanged}
                   onTaskDescriptionChanged={this.onTaskDescriptionChanged}
+                  onDeadlineChanged={this.onDeadlineChanged}
                   />
 
               </div>

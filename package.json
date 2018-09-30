@@ -1,6 +1,6 @@
 {
   "name": "taskpro",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "dependencies": {
     "bootstrap": "^4.1.3",
@@ -8,10 +8,10 @@
     "jquery": "^3.3.1",
     "moment": "^2.22.2",
     "npm": "^6.4.1",
-    "popper": "^1.0.1",
     "react": "^16.5.2",
-    "react-datepicker": "^1.6.0",
+    "react-day-picker": "^7.2.4",
     "react-dom": "^16.5.2",
+    "react-popper": "^1.0.2",
     "react-scripts": "1.1.5"
   },
   "scripts": {

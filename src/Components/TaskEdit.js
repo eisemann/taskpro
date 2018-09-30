@@ -1,13 +1,26 @@
 import React, { Component } from 'react';
 
+import DayPickerInput from 'react-day-picker/DayPickerInput';
+
+import MomentLocaleUtils, {
+  formatDate,
+  parseDate,
+} from 'react-day-picker/moment';
+
+import 'react-day-picker/lib/style.css';
+
 
 class TaskEdit extends Component {
   render(){
-
+    console.log("render TaskEdit");
+    console.log(this.props.task);
+    console.log(this.props.deadline);
     const {
       task,
+      deadline,
       onTaskNameChanged,
       onTaskDescriptionChanged,
+      onDeadlineChanged,
     } = this.props;
 
     return(
@@ -39,10 +52,27 @@ NOTE: the {prop.value || ''} code addresses the following warning that happens w
               onChange={event => onTaskDescriptionChanged(event)}
               />
 
-            <p>subtasks</p>
-            <p>points/hours</p>
-            <p>deadline</p>
-            <p>tags</p>
+
+
+            <DayPickerInput
+              value={deadline}
+              onDayChange={date => onDeadlineChanged(date)}
+              formatDate={formatDate}
+              parseDate={parseDate}
+              placeholder={`Deadline (e.g. ${formatDate(new Date())})`}
+
+              dayPickerProps={{
+                selectedDay: deadline,
+              }}
+            />
+
+{
+/*
+-points/hours
+-subtasks
+-tags
+*/
+}
           </form>
         </div>
 
