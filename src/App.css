@@ -1,13 +1,3 @@
-.DayPickerInput, .DayPickerInput input{
-  width:100%;
-}
-
-.DayPickerInput input{
-    padding: .375rem .75rem;
-    border-radius: .25rem;
-    border: 1px solid #ced4da;
-}
-
 
 .App header {
   background: #eee;
@@ -57,4 +47,26 @@
 
 .task-list .task.completed{
   text-decoration: line-through
+}
+
+/* -------------------------------------------------------------------------- */
+
+#taskModal .modal-body {
+  padding-top: 0;
+}
+
+.task-label {
+  margin: 15px 0 0 0;
+  font-size: .8em;
+}
+
+/* DayPickerInput input didn't like bootstrap's form-control class */
+.DayPickerInput, .DayPickerInput input{
+  width:100%;
+}
+/* DayPickerInput input didn't like bootstrap's form-control class */
+.DayPickerInput input{
+    padding: .375rem .75rem;
+    border-radius: .25rem;
+    border: 1px solid #ced4da;
 }

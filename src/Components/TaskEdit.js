@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 
 import DayPickerInput from 'react-day-picker/DayPickerInput';
 
-import MomentLocaleUtils, {
-  formatDate,
-  parseDate,
-} from 'react-day-picker/moment';
+// import {
+//   formatDate,
+//   parseDate,
+// } from 'react-day-picker/moment';
 
 import 'react-day-picker/lib/style.css';
 
@@ -33,6 +33,7 @@ NOTE: the {prop.value || ''} code addresses the following warning that happens w
 "Warning: A component is changing a controlled input of type text to be uncontrolled...."
 */
 }
+            <p className="task-label">Name</p>
             <input
               type="text"
               className="form-control"
@@ -41,6 +42,7 @@ NOTE: the {prop.value || ''} code addresses the following warning that happens w
               onChange={event => onTaskNameChanged(event)}
               />
 
+            <p className="task-label">Description</p>
             <input
               type="text"
               className="form-control"
@@ -49,14 +51,14 @@ NOTE: the {prop.value || ''} code addresses the following warning that happens w
               onChange={event => onTaskDescriptionChanged(event)}
               />
 
-
-
+{/*
+see http://react-day-picker.js.org/api/DayPickerInput
+TODO: fix initial date formatting
+*/}
+            <p className="task-label">Deadline</p>
             <DayPickerInput
               value={task.deadline}
               onDayChange={date => onDeadlineChanged(date)}
-              formatDate={formatDate}
-              parseDate={parseDate}
-              placeholder={`Deadline (e.g. ${formatDate(new Date())})`}
 
               dayPickerProps={{
                 selectedDay: task.deadline,

@@ -9,11 +9,7 @@ import $ from 'jquery';
 // import Popper from 'popper.js';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 
-// React Day Picker and Moment ------------------------------------------------
-// import MomentLocaleUtils, {
-//   formatDate,
-//   parseDate,
-// } from 'react-day-picker/moment';
+// Moment (for date formatting ) -----------------------------------------------
 import moment from 'moment';
 
 // styles ----------------------------------------------------------------------
@@ -91,23 +87,36 @@ class App extends Component {
   }
 
   onDeadlineChanged(deadline){
+
     const current_task = {
       ...this.state.current_task,
       deadline
     };
     this.setState({ current_task });
+
   }
 
   // ---------------------------------------------------------------------------
 
   onSaveCurrentTask(){
+
+    console.log("onSaveCurrentTask");
+    console.log(this.state.current_task);
+
     const {
       id,
       name,
       description,
-      deadline,
       completed
     } = this.state.current_task;
+
+    let deadline = this.state.current_task.deadline;
+
+    let deadline_moment = moment(deadline, "YYYY-M-D");
+    if (deadline_moment.isValid())
+      deadline = deadline_moment.format("YYYY-MM-DD")
+    else
+      deadline = '';
 
     if (id){
       // update existing task
@@ -167,8 +176,8 @@ class App extends Component {
     };
 
     // if deadline is not valid, clear it
-    if (!moment(selected_task.deadline, 'MM/DD/YYYY').isValid())
-      selected_task.deadline = '';
+    // if (!moment(selected_task.deadline, 'MM/DD/YYYY').isValid())
+    //   selected_task.deadline = '';
 
     this.setState({ current_task: selected_task });
     // open the modal
@@ -199,6 +208,7 @@ class App extends Component {
       show_completed,
       keyword_search,
     } = this.state;
+
 
     return (
       <div className="App container">
