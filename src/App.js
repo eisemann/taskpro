@@ -41,6 +41,7 @@ class App extends Component {
     this.onTaskNameChanged = this.onTaskNameChanged.bind(this);
     this.onTaskDescriptionChanged = this.onTaskDescriptionChanged.bind(this);
     this.onDeadlineChanged = this.onDeadlineChanged.bind(this);
+    this.onTaskPriorityChanged = this.onTaskPriorityChanged.bind(this);
 
     this.onSaveCurrentTask = this.onSaveCurrentTask.bind(this);
 
@@ -96,6 +97,20 @@ class App extends Component {
 
   }
 
+  onTaskPriorityChanged(event){
+
+    const priority = $(event.target).attr("data-priority");
+
+    // console.log("onTaskPriorityChanged");
+    // console.log(event.target);
+    console.log(priority);
+
+    const current_task = {
+      ...this.state.current_task,
+      priority
+    };
+    this.setState({ current_task });
+  }
   // ---------------------------------------------------------------------------
 
   onSaveCurrentTask(){
@@ -118,19 +133,21 @@ class App extends Component {
     else
       deadline = '';
 
+    let priority = this.state.current_task.priority || '';
+
     if (id){
       // update existing task
       this.fbTasksRef.update({
         [id]:{
           ...this.state.task_list[id],
-          name, description, completed, deadline
+          name, description, completed, deadline, priority
         }
       })
     }
     else {
       // push a new task
       this.fbTasksRef.push({
-        name, description, completed, deadline
+        name, description, completed, deadline, priority
       })
     }
   }
@@ -174,10 +191,6 @@ class App extends Component {
       ...this.state.task_list[task],
       id: task
     };
-
-    // if deadline is not valid, clear it
-    // if (!moment(selected_task.deadline, 'MM/DD/YYYY').isValid())
-    //   selected_task.deadline = '';
 
     this.setState({ current_task: selected_task });
     // open the modal
@@ -255,7 +268,6 @@ class App extends Component {
               tasks={task_list}
               show_completed={show_completed}
               keyword_search={keyword_search}
-              sort_by="created_at"
               onEditTask={this.onEditTask}
               onTaskToggle={this.onTaskToggle}
               header_text="Main"
@@ -311,6 +323,7 @@ class App extends Component {
                   onTaskNameChanged={this.onTaskNameChanged}
                   onTaskDescriptionChanged={this.onTaskDescriptionChanged}
                   onDeadlineChanged={this.onDeadlineChanged}
+                  onTaskPriorityChanged={this.onTaskPriorityChanged}
                   />
 
               </div>

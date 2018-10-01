@@ -2,11 +2,6 @@ import React, { Component } from 'react';
 
 import DayPickerInput from 'react-day-picker/DayPickerInput';
 
-// import {
-//   formatDate,
-//   parseDate,
-// } from 'react-day-picker/moment';
-
 import 'react-day-picker/lib/style.css';
 
 
@@ -23,13 +18,25 @@ class TaskEdit extends Component {
       onTaskNameChanged,
       onTaskDescriptionChanged,
       onDeadlineChanged,
+      onTaskPriorityChanged,
     } = this.props;
 
     let priority_buttons = [];
-    for (let i = 1; i <= NUMBER_OF_PRIORITY_OPTIONS; i++){
-      priority_buttons.push(
-        <button type="button" class="btn btn-secondary">{i}</button>
-      )
+
+    if (task){
+      for (let i = NUMBER_OF_PRIORITY_OPTIONS; i >= 1; i--){
+        let active_class = i+'' === task.priority ? 'active' : '';
+
+        priority_buttons.push(
+          <button
+            key={"priority_key_"+i}
+            data-priority={i}
+            type="button"
+            className={"btn btn-secondary "+active_class}
+            onClick={event => onTaskPriorityChanged(event)}
+            >{i}</button>
+        )
+      }
     }
 
 
@@ -79,7 +86,7 @@ TODO: fix initial date formatting
             />
 
             <p className="task-label">Priority</p>
-            <div class="btn-group" role="group" aria-label="Basic example">
+            <div className="btn-group" role="group" aria-label="Basic example">
               {priority_buttons}
             </div>
 
