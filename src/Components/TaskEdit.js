@@ -11,7 +11,12 @@ import 'react-day-picker/lib/style.css';
 
 
 class TaskEdit extends Component {
+
+
+
   render(){
+
+    const NUMBER_OF_PRIORITY_OPTIONS = 10;
 
     const {
       task,
@@ -19,6 +24,14 @@ class TaskEdit extends Component {
       onTaskDescriptionChanged,
       onDeadlineChanged,
     } = this.props;
+
+    let priority_buttons = [];
+    for (let i = 1; i <= NUMBER_OF_PRIORITY_OPTIONS; i++){
+      priority_buttons.push(
+        <button type="button" class="btn btn-secondary">{i}</button>
+      )
+    }
+
 
     return(
 
@@ -64,6 +77,11 @@ TODO: fix initial date formatting
                 selectedDay: task.deadline,
               }}
             />
+
+            <p className="task-label">Priority</p>
+            <div class="btn-group" role="group" aria-label="Basic example">
+              {priority_buttons}
+            </div>
 
 {
 /*
