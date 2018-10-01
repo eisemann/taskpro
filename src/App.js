@@ -44,6 +44,7 @@ class App extends Component {
     this.onTaskPriorityChanged = this.onTaskPriorityChanged.bind(this);
 
     this.onSaveCurrentTask = this.onSaveCurrentTask.bind(this);
+    this.onDeleteTask = this.onDeleteTask.bind(this);
 
     this.onShowCompletedToggle = this.onShowCompletedToggle.bind(this);
     this.onSearchChange = this.onSearchChange.bind(this);
@@ -101,10 +102,6 @@ class App extends Component {
 
     const priority = $(event.target).attr("data-priority");
 
-    // console.log("onTaskPriorityChanged");
-    // console.log(event.target);
-    console.log(priority);
-
     const current_task = {
       ...this.state.current_task,
       priority
@@ -113,10 +110,24 @@ class App extends Component {
   }
   // ---------------------------------------------------------------------------
 
-  onSaveCurrentTask(){
+  onDeleteTask(event){
+    event.preventDefault();
 
-    console.log("onSaveCurrentTask");
-    console.log(this.state.current_task);
+    const id = this.state.current_task.id;
+
+    if (window.confirm("Are you sure you want to permanently delete this task?")){
+      // if the id is valid, delete the task from firebase
+      if (id){
+        this.fbTasksRef.update({
+          [id]: null
+        })
+      }
+
+      $('#taskModal').modal('hide');
+    }
+  }
+
+  onSaveCurrentTask(){
 
     const {
       id,
@@ -328,6 +339,7 @@ class App extends Component {
 
               </div>
               <div className="modal-footer">
+
                 <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
                 <button
                   type="button"
@@ -335,7 +347,13 @@ class App extends Component {
                   data-dismiss="modal"
                   onClick={this.onSaveCurrentTask}
                   >Save changes</button>
+
+                <a href="#delete"
+                  className="btn btn-link delete"
+                  onClick={event => this.onDeleteTask(event)}>Delete</a>
+
               </div>
+
             </div>
           </div>
         </div>

@@ -70,3 +70,10 @@
     border-radius: .25rem;
     border: 1px solid #ced4da;
 }
+
+#taskModal .btn.delete{
+  font-size: .6em;
+  padding:0;
+  margin-left: 20px;
+  color:#aaa;
+}
